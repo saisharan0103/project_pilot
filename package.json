@@ -1,0 +1,16 @@
+{
+  "name": "project_pilot",
+  "version": "1.0.0",
+  "description": "Project Pilot is an AI-native platform that helps developers build software incrementally. It guides users through a phase-by-phase workflow—Planning, Core Logic, Testing and Deployment—while generating documentation and prompt packs tuned for tools like ChatGPT Codex, Claude and Cursor.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
