@@ -16,7 +16,18 @@ This project is expected to run on a Next.js + Supabase stack. To work with the 
 - Node.js 18 or later
 - pnpm or npm for installing dependencies
 - Access to a Supabase project
-- API keys for any integrated AI services (see `apikeys.txt` as a placeholder)
+- API keys for any integrated AI services (provided via environment variables)
 
-After cloning, install dependencies and set up your environment variables in a local `.env` file before running the development server.
+After cloning, install dependencies and set up your environment variables in a local `.env` file before running the development server. See `.env.example` for the required variable names.
+
+## Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+# API key for your preferred AI service (e.g. OpenAI or Anthropic)
+AI_API_KEY=<your-ai-api-key>
+```
 
