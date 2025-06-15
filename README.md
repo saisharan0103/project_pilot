@@ -17,6 +17,7 @@ This project is expected to run on a Next.js + Supabase stack. To work with the 
 - pnpm or npm for installing dependencies
 - Access to a Supabase project
 - API keys for any integrated AI services (provided via environment variables)
+- A Clerk account and API keys for authentication
 
 After cloning, install dependencies and set up your environment variables in a local `.env` file before running the development server. See `.env.example` for the required variable names.
 
@@ -29,6 +30,9 @@ NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 # API key for your preferred AI service (used server-side only)
 AI_API_KEY=<your-ai-api-key>
+# Clerk authentication keys
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
+CLERK_SECRET_KEY=<your-clerk-secret-key>
 ```
 
 ## Development
