@@ -20,7 +20,8 @@ export async function createProject(project: NewProject) {
     .single();
 
   if (error) {
-    throw error;
+    console.error('createProject error:', error.message);
+    throw new Error(error.message);
   }
 
   return data;
