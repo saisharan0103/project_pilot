@@ -1,69 +1,63 @@
-import React, { useState } from 'react';
-import { Textarea } from '../ui/textarea';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
+import { useState } from 'react'
+import { saveProjectArtifacts } from '../../lib/api/saveProjectArtifacts'
 
-export default function PlanningGenerator() {
-  const [prompt, setPrompt] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
+interface PlanningGeneratorProps {
+  projectId: string
+}
 
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setResult('');
+export default function PlanningGenerator({ projectId }: PlanningGeneratorProps) {
+  const [prd, setPrd] = useState('')
+  const [techStack, setTechStack] = useState('')
+  const [promptPack, setPromptPack] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSave() {
+    setSaving(true)
+    setError(null)
     try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setResult(data.text ?? '');
-      } else {
-        setResult(data.error || 'Error');
-      }
-    } catch (err) {
-      console.error(err);
-      setResult('Error generating');
+      // Save project artifacts to Supabase
+      await saveProjectArtifacts({
+        projectId,
+        prd,
+        techStack,
+        promptPack,
+      })
+    } catch (err: any) {
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setSaving(false)
     }
   }
 
   return (
-    <Card className="mt-4">
-      <CardHeader>
-        <CardTitle>Planning Generator</CardTitle>
-      </CardHeader>
-      <form onSubmit={handleGenerate}>
-        <CardContent className="space-y-4">
-          <div>
-            <label htmlFor="prompt" className="mb-2 block text-sm font-medium">
-              Describe your project
-            </label>
-            <Textarea
-              id="prompt"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="mb-2 block text-sm font-medium">Result</label>
-            <Textarea value={result} readOnly className="h-48" />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <button
-            type="submit"
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-            disabled={loading}
-          >
-            {loading ? 'Generating...' : 'Generate'}
-          </button>
-        </CardFooter>
-      </form>
-    </Card>
-  );
+    <div className="space-y-4">
+      <textarea
+        value={prd}
+        onChange={(e) => setPrd(e.target.value)}
+        placeholder="PRD"
+        className="w-full border rounded p-2"
+      />
+      <textarea
+        value={techStack}
+        onChange={(e) => setTechStack(e.target.value)}
+        placeholder="Tech Stack"
+        className="w-full border rounded p-2"
+      />
+      <textarea
+        value={promptPack}
+        onChange={(e) => setPromptPack(e.target.value)}
+        placeholder="Prompt Pack"
+        className="w-full border rounded p-2"
+      />
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="rounded bg-blue-600 text-white px-4 py-2"
+      >
+        {saving ? 'Saving...' : 'Save'}
+      </button>
+      {error && <p className="text-red-500">{error}</p>}
+    </div>
+  )
 }
