@@ -42,3 +42,21 @@ npm run dev
 
 The application uses the Next.js `pages/` directory. Reusable UI components live in `components/` and helper functions are in `lib/`.
 
+
+## Using npm scripts
+
+Before running `npm run dev`, `npm run lint`, or invoking the TypeScript compiler with `npx tsc`, make sure you have installed all project dependencies:
+
+```bash
+npm install
+```
+
+This step sets up the `node_modules` directory and ensures the development server, linters and TypeScript all function correctly.
+
+## Testing
+
+Automated tests are not included yet. Once a Jest configuration is added, you will be able to run the suite with:
+
+```bash
+npm test
+```
