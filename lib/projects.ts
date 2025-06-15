@@ -7,6 +7,14 @@ export interface NewProject {
   aiTool: string;
 }
 
+export interface Project {
+  id: string
+  user_id: string
+  name: string
+  description: string
+  ai_tool: string
+}
+
 export async function createProject(project: NewProject) {
   const { data, error } = await supabase
     .from('projects')
@@ -25,4 +33,19 @@ export async function createProject(project: NewProject) {
   }
 
   return data;
+}
+
+export async function getProjectById(id: string) {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('getProjectById error:', error.message)
+    throw new Error(error.message)
+  }
+
+  return data as Project
 }

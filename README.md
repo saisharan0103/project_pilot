@@ -4,8 +4,8 @@ Project Pilot is an AI-native platform that helps developers build software incr
 
 The repository includes two key documents that describe the vision and minimal viable product (MVP):
 
-- [`ProjectPilot_Codex_ProjectDescription.md`](docs/ProjectPilot_Codex_ProjectDescription.md) – High level overview and philosophy of Project Pilot.
-- [`ProjectPilot_Mvp_Prd.md`](docs/ProjectPilot_Mvp_Prd.md) – Product requirements for the v0.1 MVP release.
+- [`docs/ProjectPilot_Codex_ProjectDescription.md`](docs/ProjectPilot_Codex_ProjectDescription.md) – High level overview and philosophy of Project Pilot.
+- [`docs/ProjectPilot_Mvp_Prd.md`](docs/ProjectPilot_Mvp_Prd.md) – Product requirements for the v0.1 MVP release.
 
 These documents shape development by framing the product vision and clarifying the MVP feature set.
 
@@ -19,11 +19,6 @@ This project is expected to run on a Next.js + Supabase stack. To work with the 
 - API keys for any integrated AI services (provided via environment variables)
 - A Clerk account and API keys for authentication
 
-After cloning, install dependencies and set up your environment variables in a `.env.local` file before running the development server. Use `.env.example` as a reference for the required variable names.
-
-## Environment Variables
-
-Create a `.env.local` file in the project root with the following variables:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
@@ -37,6 +32,8 @@ AI_API_KEY=<your-ai-api-key>
 # Clerk authentication keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
+```
+
 ```
 
 
