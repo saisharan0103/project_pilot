@@ -1,17 +1,38 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
+
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Select } from "../ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { createProject } from "../../lib/projects";
 
 export function ProjectCreatorForm() {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [aiTool, setAiTool] = useState("Claude");
+  const { user } = useUser();
+  const router = useRouter();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log({ projectName, projectDescription, aiTool });
+    if (!user) return;
+
+    try {
+      const project = await createProject({
+        userId: user.id,
+        name: projectName,
+        description: projectDescription,
+        aiTool,
+      });
+
+      if (project && project.id) {
+        router.push(`/projects/${project.id}`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
