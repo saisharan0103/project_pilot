@@ -19,11 +19,6 @@ This project is expected to run on a Next.js + Supabase stack. To work with the 
 - API keys for any integrated AI services (provided via environment variables)
 - A Clerk account and API keys for authentication
 
-After cloning, install dependencies and copy the provided `.env.example` file to `.env.local` before running the development server. Fill in your own values for each key.
-
-## Environment Variables
-
-Copy `.env.example` to `.env.local` in the project root and update the variables:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
@@ -37,6 +32,7 @@ AI_API_KEY=<your-ai-api-key>
 # Clerk authentication keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
+```
 
 ```
 
