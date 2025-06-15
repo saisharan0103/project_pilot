@@ -15,3 +15,7 @@ export function CardTitle({ children, className = "" }: { children: ReactNode; c
 export function CardContent({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`p-4 ${className}`}>{children}</div>;
 }
+
+export function CardFooter({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`border-t p-4 ${className}`}>{children}</div>;
+}
