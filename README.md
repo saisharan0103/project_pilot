@@ -28,12 +28,17 @@ Create a `.env` file in the project root with the following variables:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+
+# API keys for AI providers
+OPENAI_API_KEY=<your-openai-api-key>
+ANTHROPIC_API_KEY=<your-anthropic-api-key>
+=======
 # API key for your preferred AI service (used server-side only)
 AI_API_KEY=<your-ai-api-key>
 # Clerk authentication keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
-```
+
 
 ## Development
 
