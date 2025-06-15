@@ -27,8 +27,9 @@ Create a `.env` file in the project root with the following variables:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
-# API key for your preferred AI service (e.g. OpenAI or Anthropic)
-AI_API_KEY=<your-ai-api-key>
+# API keys for AI providers
+OPENAI_API_KEY=<your-openai-api-key>
+ANTHROPIC_API_KEY=<your-anthropic-api-key>
 ```
 
 ## Development
