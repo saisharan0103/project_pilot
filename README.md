@@ -4,8 +4,8 @@ Project Pilot is an AI-native platform that helps developers build software incr
 
 The repository includes two key documents that describe the vision and minimal viable product (MVP):
 
-- [`ProjectPilot_Codex_ProjectDescription.md`](docs/ProjectPilot_Codex_ProjectDescription.md) – High level overview and philosophy of Project Pilot.
-- [`ProjectPilot_Mvp_Prd.md`](docs/ProjectPilot_Mvp_Prd.md) – Product requirements for the v0.1 MVP release.
+- [`docs/ProjectPilot_Codex_ProjectDescription.md`](docs/ProjectPilot_Codex_ProjectDescription.md) – High level overview and philosophy of Project Pilot.
+- [`docs/ProjectPilot_Mvp_Prd.md`](docs/ProjectPilot_Mvp_Prd.md) – Product requirements for the v0.1 MVP release.
 
 These documents shape development by framing the product vision and clarifying the MVP feature set.
 
