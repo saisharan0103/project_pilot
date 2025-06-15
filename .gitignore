@@ -28,4 +28,5 @@ Thumbs.db
 
 # Vercel
 .vercel/
+# Local API key file (should never be committed)
 apikeys.txt
