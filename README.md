@@ -31,3 +31,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 AI_API_KEY=<your-ai-api-key>
 ```
 
+## Development
+
+Install dependencies and start the local server:
+
+```bash
+npm install
+npm run dev
+```
+
+The application uses the Next.js `pages/` directory. Reusable UI components live in `components/` and helper functions are in `lib/`.
+
