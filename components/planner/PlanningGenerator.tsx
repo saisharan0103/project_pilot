@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { getProjectById } from "@/lib/projects";
+import { saveProjectArtifacts } from "@/lib/api/saveProjectArtifacts";
 import {
   Card,
   CardContent,
@@ -17,49 +19,62 @@ type Project = {
   ai_tool: string;
 };
 
-async function generateContent(prompt: string) {
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+async function generatePlanning(project: Project) {
+  const res = await fetch("/api/generate-planning", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
+      projectName: project.name,
+      projectDescription: project.description,
+      aiTool: project.ai_tool,
     }),
   });
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim() || "";
+  if (!res.ok) {
+    throw new Error("Failed to generate planning");
+  }
+  return (await res.json()) as {
+    prd?: string;
+    techStack?: string;
+    promptPack?: string;
+    text?: string;
+  };
 }
 
-export default function PlanningGenerator({ project }: { project: Project }) {
+export default function PlanningGenerator({
+  projectId,
+}: {
+  projectId: string;
+}) {
+  const [project, setProject] = useState<Project | null>(null);
   const [prd, setPrd] = useState("");
   const [techStack, setTechStack] = useState("");
   const [promptPack, setPromptPack] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function fetchProject() {
+      if (!projectId) return;
+      try {
+        const data = await getProjectById(projectId);
+        setProject(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchProject();
+  }, [projectId]);
+
+  useEffect(() => {
     async function generate() {
       if (!project) return;
       setLoading(true);
       try {
-        const base = `Project Name: ${project.name}\nDescription: ${project.description}`;
-        setPrd(
-          await generateContent(
-            `${base}\nGenerate a short Product Requirements Document.`
-          )
-        );
-        setTechStack(
-          await generateContent(
-            `${base}\nRecommend a concise tech stack for this project.`
-          )
-        );
-        setPromptPack(
-          await generateContent(
-            `${base}\nCreate a prompt pack for the ${project.ai_tool} AI tool.`
-          )
-        );
+        const data = await generatePlanning(project);
+        setPrd(data.prd || data.text || "");
+        setTechStack(data.techStack || "");
+        setPromptPack(data.promptPack || "");
       } catch (err) {
         console.error(err);
       } finally {
@@ -69,9 +84,13 @@ export default function PlanningGenerator({ project }: { project: Project }) {
     generate();
   }, [project]);
 
-  function handleSave(section: "prd" | "stack" | "prompts") {
-    // TODO: connect to Supabase
-    console.log("save", section);
+  function handleSave() {
+    saveProjectArtifacts({
+      projectId,
+      prd,
+      techStack,
+      promptPack,
+    }).catch((err) => console.error(err));
   }
 
   return (
@@ -92,7 +111,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("prd")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
@@ -111,7 +130,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("stack")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
@@ -131,7 +150,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("prompts")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
