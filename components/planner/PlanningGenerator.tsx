@@ -1,118 +1,143 @@
-import { useEffect, useState } from 'react'
-import { saveProjectArtifacts } from '../../lib/api/saveProjectArtifacts'
-import { getProjectById, Project } from '../../lib/projects'
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import { Skeleton } from "../ui/skeleton";
 
-interface PlanningGeneratorProps {
-  projectId?: string
+type Project = {
+  name: string;
+  description: string;
+  ai_tool: string;
+};
+
+async function generateContent(prompt: string) {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content?.trim() || "";
 }
 
-export default function PlanningGenerator({ projectId }: PlanningGeneratorProps) {
-  const [prd, setPrd] = useState('')
-  const [techStack, setTechStack] = useState('')
-  const [promptPack, setPromptPack] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [generating, setGenerating] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [project, setProject] = useState<Project | null>(null)
+export default function PlanningGenerator({ project }: { project: Project }) {
+  const [prd, setPrd] = useState("");
+  const [techStack, setTechStack] = useState("");
+  const [promptPack, setPromptPack] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!projectId) return
-    ;(async () => {
+    async function generate() {
+      if (!project) return;
+      setLoading(true);
       try {
-        const p = await getProjectById(projectId)
-        setProject(p)
+        const base = `Project Name: ${project.name}\nDescription: ${project.description}`;
+        setPrd(
+          await generateContent(
+            `${base}\nGenerate a short Product Requirements Document.`
+          )
+        );
+        setTechStack(
+          await generateContent(
+            `${base}\nRecommend a concise tech stack for this project.`
+          )
+        );
+        setPromptPack(
+          await generateContent(
+            `${base}\nCreate a prompt pack for the ${project.ai_tool} AI tool.`
+          )
+        );
       } catch (err) {
-        console.error(err)
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    })()
-  }, [projectId])
-
-  async function handleSave() {
-    if (!projectId) return
-    setSaving(true)
-    setError(null)
-    try {
-      // Save project artifacts to Supabase
-      await saveProjectArtifacts({
-        projectId,
-        prd,
-        techStack,
-        promptPack,
-      })
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setSaving(false)
     }
-  }
+    generate();
+  }, [project]);
 
-  async function handleGenerate() {
-    if (!project) return
-    setGenerating(true)
-    setError(null)
-    try {
-      const response = await fetch('/api/generate-planning', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          projectName: project.name,
-          projectDescription: project.description,
-          aiTool: project.ai_tool,
-        }),
-      })
-
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate')
-      }
-
-      setPrd(data.prd || data.text || '')
-      setTechStack(data.techStack || '')
-      setPromptPack(data.promptPack || '')
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setGenerating(false)
-    }
+  function handleSave(section: "prd" | "stack" | "prompts") {
+    // TODO: connect to Supabase
+    console.log("save", section);
   }
 
   return (
     <div className="space-y-4">
-      <textarea
-        value={prd}
-        onChange={(e) => setPrd(e.target.value)}
-        placeholder="PRD"
-        className="w-full border rounded p-2"
-      />
-      <textarea
-        value={techStack}
-        onChange={(e) => setTechStack(e.target.value)}
-        placeholder="Tech Stack"
-        className="w-full border rounded p-2"
-      />
-      <textarea
-        value={promptPack}
-        onChange={(e) => setPromptPack(e.target.value)}
-        placeholder="Prompt Pack"
-        className="w-full border rounded p-2"
-      />
-      {project && (
-        <button
-          onClick={handleGenerate}
-          disabled={generating}
-          className="rounded bg-green-600 text-white px-4 py-2"
-        >
-          {generating ? 'Generating...' : 'Generate with AI'}
-        </button>
-      )}
-      <button
-        onClick={handleSave}
-        disabled={saving || !projectId}
-        className="rounded bg-blue-600 text-white px-4 py-2"
-      >
-        {saving ? 'Saving...' : 'Save'}
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
+      <Card>
+        <CardHeader>
+          <CardTitle>Product Requirements Document</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <Skeleton className="h-32 w-full" />
+          ) : (
+            <Textarea
+              value={prd}
+              onChange={(e) => setPrd(e.target.value)}
+              className="min-h-[160px]"
+            />
+          )}
+        </CardContent>
+        <CardFooter>
+          <Button onClick={() => handleSave("prd")}>Save Changes</Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Tech Stack</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <Skeleton className="h-10 w-full" />
+          ) : (
+            <Input
+              value={techStack}
+              onChange={(e) => setTechStack(e.target.value)}
+            />
+          )}
+        </CardContent>
+        <CardFooter>
+          <Button onClick={() => handleSave("stack")}>Save Changes</Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Prompt Pack</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <Skeleton className="h-28 w-full" />
+          ) : (
+            <Textarea
+              value={promptPack}
+              onChange={(e) => setPromptPack(e.target.value)}
+              className="min-h-[140px]"
+            />
+          )}
+        </CardContent>
+        <CardFooter>
+          <Button onClick={() => handleSave("prompts")}>Save Changes</Button>
+        </CardFooter>
+      </Card>
+
+      <div className="text-right">
+        <Button>Download ZIP</Button>
+      </div>
     </div>
-  )
+  );
 }
