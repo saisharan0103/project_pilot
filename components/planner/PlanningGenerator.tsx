@@ -17,20 +17,27 @@ type Project = {
   ai_tool: string;
 };
 
-async function generateContent(prompt: string) {
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+async function generatePlanning(project: Project) {
+  const res = await fetch("/api/generate-planning", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
+      projectName: project.name,
+      projectDescription: project.description,
+      aiTool: project.ai_tool,
     }),
   });
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim() || "";
+  if (!res.ok) {
+    throw new Error("Failed to generate planning");
+  }
+  return (await res.json()) as {
+    prd?: string;
+    techStack?: string;
+    promptPack?: string;
+    text?: string;
+  };
 }
 
 export default function PlanningGenerator({ project }: { project: Project }) {
@@ -44,22 +51,10 @@ export default function PlanningGenerator({ project }: { project: Project }) {
       if (!project) return;
       setLoading(true);
       try {
-        const base = `Project Name: ${project.name}\nDescription: ${project.description}`;
-        setPrd(
-          await generateContent(
-            `${base}\nGenerate a short Product Requirements Document.`
-          )
-        );
-        setTechStack(
-          await generateContent(
-            `${base}\nRecommend a concise tech stack for this project.`
-          )
-        );
-        setPromptPack(
-          await generateContent(
-            `${base}\nCreate a prompt pack for the ${project.ai_tool} AI tool.`
-          )
-        );
+        const data = await generatePlanning(project);
+        setPrd(data.prd || data.text || "");
+        setTechStack(data.techStack || "");
+        setPromptPack(data.promptPack || "");
       } catch (err) {
         console.error(err);
       } finally {
