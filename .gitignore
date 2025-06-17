@@ -19,6 +19,9 @@ out/
 .env.test.local
 .env.production.local
 
+# Local secrets
+apikeys.txt
+
 # IDE settings
 .vscode/
 

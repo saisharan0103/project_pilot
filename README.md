@@ -16,9 +16,11 @@ This project is expected to run on a Next.js + Supabase stack. To work with the 
 - Node.js 18 or later
 - pnpm or npm for installing dependencies
 - Access to a Supabase project
-- API keys for any integrated AI services (provided via environment variables)
+- API keys for any integrated AI services (set in a `.env.local` file)
 - A Clerk account and API keys for authentication
 
+
+Create a `.env.local` file in the project root and add the following variables:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
@@ -32,8 +34,6 @@ AI_API_KEY=<your-ai-api-key>
 # Clerk authentication keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
-```
-
 ```
 
 
