@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { getProjectById } from "@/lib/projects";
+import { saveProjectArtifacts } from "@/lib/api/saveProjectArtifacts";
 import {
   Card,
   CardContent,
@@ -33,11 +35,29 @@ async function generateContent(prompt: string) {
   return data.choices?.[0]?.message?.content?.trim() || "";
 }
 
-export default function PlanningGenerator({ project }: { project: Project }) {
+export default function PlanningGenerator({
+  projectId,
+}: {
+  projectId: string;
+}) {
+  const [project, setProject] = useState<Project | null>(null);
   const [prd, setPrd] = useState("");
   const [techStack, setTechStack] = useState("");
   const [promptPack, setPromptPack] = useState("");
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProject() {
+      if (!projectId) return;
+      try {
+        const data = await getProjectById(projectId);
+        setProject(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchProject();
+  }, [projectId]);
 
   useEffect(() => {
     async function generate() {
@@ -69,9 +89,13 @@ export default function PlanningGenerator({ project }: { project: Project }) {
     generate();
   }, [project]);
 
-  function handleSave(section: "prd" | "stack" | "prompts") {
-    // TODO: connect to Supabase
-    console.log("save", section);
+  function handleSave() {
+    saveProjectArtifacts({
+      projectId,
+      prd,
+      techStack,
+      promptPack,
+    }).catch((err) => console.error(err));
   }
 
   return (
@@ -92,7 +116,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("prd")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
@@ -111,7 +135,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("stack")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
@@ -131,7 +155,7 @@ export default function PlanningGenerator({ project }: { project: Project }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={() => handleSave("prompts")}>Save Changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
       </Card>
 
