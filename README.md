@@ -1,13 +1,28 @@
-# Project Pilot
+# 🚀 Project Pilot
 
-Project Pilot is an AI-native platform that helps developers build software incrementally. It guides users through a phase-by-phase workflow—Planning, Core Logic, Testing and Deployment—while generating documentation and prompt packs tuned for tools like ChatGPT Codex, Claude and Cursor.
+![Project Pilot Logo](public/next.svg)
 
-The repository includes two key documents that describe the vision and minimal viable product (MVP):
+Project Pilot is an AI‑native platform that helps developers build software **one phase at a time**. It provides planning tools, generates documentation and offers prompt packs tuned for AI coding assistants like ChatGPT Codex, Claude and Cursor.
 
-- [ProjectPilot Codex Project Description](docs/ProjectPilot_Codex_ProjectDescription.md) – High level overview and philosophy of Project Pilot.
-- [ProjectPilot MVP PRD](docs/ProjectPilot_Mvp_Prd.md) – Product requirements for the v0.1 MVP release.
+Two key documents define the vision and minimum viable product:
 
-These documents shape development by framing the product vision and clarifying the MVP feature set.
+- [ProjectPilot Codex Project Description](docs/ProjectPilot_Codex_ProjectDescription.md) – high level overview and philosophy
+- [ProjectPilot MVP PRD](docs/ProjectPilot_Mvp_Prd.md) – requirements for the v0.1 MVP release
+
+These docs shape development by clarifying the product vision and feature set.
+
+## Features
+
+- Phase‑based workflow: Planning → Logic → Testing → Deployment
+- AI‑generated PRDs and prompt packs
+- Built with Next.js and Supabase
+
+## Getting Started
+
+1. Clone this repository.
+2. Install dependencies with `npm install`.
+3. Create a `.env.local` file (see below) and fill in your keys.
+4. Start the development server: `npm run dev`.
 
 ## Prerequisites
 
@@ -36,10 +51,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
 ```
 
-<<<<<<< xjtgcf-codex/remove-apikeys.txt-and-update-readme
-=======
 
->>>>>>> main
 
 ## Development
 
@@ -62,6 +74,13 @@ npm install
 ```
 
 This step sets up the `node_modules` directory and ensures the development server, linters and TypeScript all function correctly.
+
+## Project Structure
+
+- `pages/` – Next.js pages
+- `components/` – UI components
+- `lib/` – API and utility functions
+- `tests/` – Jest test suite
 
 ## Testing
 
