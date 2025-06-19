@@ -51,6 +51,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
 ```
 
+
 ## Development
 
 Install dependencies and start the local server:
